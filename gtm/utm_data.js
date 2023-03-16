@@ -1,7 +1,17 @@
+const utmParameters = [
+  "utm_campaign",
+  "utm_content",
+  "utm_name",
+  "utm_term",
+  "utm_medium",
+  "utm_source",
+  "source_url",
+];
+
 /**
  *
  * @param {*} parameters
- * @returns   [ { param: "utm_source", value: "origin" } ]
+ * @returns   { utm_source:"origin" }
  */
 function getQueryParameters(parameters) {
   const urlParams = new URLSearchParams(location.search);
@@ -15,36 +25,53 @@ function getQueryParameters(parameters) {
   return utms;
 }
 
-// ********** Here the magic!!!!
+function getUTMData() {
+  if (!!sessionStorage.getItem("utm")) return;
 
-var utmParameters = [
-  "utm_campaign",
-  "utm_content",
-  "utm_name",
-  "utm_term",
-  "utm_medium",
-  "utm_source",
-  "source_url",
-];
-
-window.onload = function () {
   // Get parameters
   let parameters = getQueryParameters(utmParameters);
+  parameters = {
+    ...parameters,
+    source_url: location.origin + location.pathname,
+  };
 
   // Set to Seccion Storage
   sessionStorage.setItem("utm", JSON.stringify(parameters));
+}
+
+function fillUbsptUtmData() {
+  const hbsptForm = document.querySelector('[id^="hbspt-form-"]');
+
+  if (!!hbsptForm) {
+    let inputForm;
+    const utmUserParams = JSON.parse(sessionStorage.getItem("utm") || "{}");
+
+    Object.keys(utmUserParams).forEach((item) => {
+      inputForm = document.querySelector(`input[name='${item}']`);
+      if (!!inputForm) inputForm.value = utmUserParams[item];
+    });
+  }
+}
+
+function setQPNewTab() {
+  jQuery("a").mousedown(function (event) {
+    const utmData = JSON.parse(sessionStorage.getItem("utm") || "{}");
+
+    let queryString = "?";
+    Object.keys(utmData).forEach((item) => {
+      queryString = `${queryString}${item}=${utmData[item]}&`;
+    });
+
+    event.target.href = event.target.href + queryString;
+  });
+}
+// ********** Here the magic!!!!
+window.onload = () => {
+  getUTMData();
+
+  setQPNewTab();
 };
 
-const hbsptForm = document.querySelector('[id^="hbspt-form-"]');
-
-if (!!hbsptForm) {
-  setTimeout(() => {
-    let inputForm;
-    const utmUserParams = JSON.parse(sessionStorage.getItem("utm"));
-
-    utmParameters.forEach((item) => {
-      inputForm = document.querySelector(`input[name='${item}']`);
-      inputForm.value = utmUserParams[item] || "";
-    });
-  }, 1000);
-}
+setTimeout(() => {
+  fillUbsptUtmData();
+}, 1000);
