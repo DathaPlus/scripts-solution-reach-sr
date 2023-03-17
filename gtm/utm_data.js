@@ -18,6 +18,9 @@ function getQueryParameters(parameters) {
 
   let utms = {};
   parameters.forEach((param) => {
+    if (param == "source_url")
+      utms = { ...utms, source_url: location.origin + location.pathname };
+
     if (!!urlParams.get(param))
       utms = { ...utms, [param]: urlParams.get(param) };
   });
@@ -30,24 +33,23 @@ function getUTMData() {
 
   // Get parameters
   let parameters = getQueryParameters(utmParameters);
-  parameters = {
-    ...parameters,
-    source_url: location.origin + location.pathname,
-  };
 
   // Set to Seccion Storage
   sessionStorage.setItem("utm", JSON.stringify(parameters));
 }
 
-function fillUbsptUtmData() {
+function fillHbsptUtmData() {
   const hbsptForm = document.querySelector('[id^="hbspt-form-"]');
+  console.log("test");
 
   if (!!hbsptForm) {
     let inputForm;
     const utmUserParams = JSON.parse(sessionStorage.getItem("utm") || "{}");
 
     Object.keys(utmUserParams).forEach((item) => {
+      console.log(item);
       inputForm = document.querySelector(`input[name='${item}']`);
+      console.log(inputForm);
       if (!!inputForm) inputForm.value = utmUserParams[item];
     });
   }
@@ -73,5 +75,5 @@ window.onload = () => {
 };
 
 setTimeout(() => {
-  fillUbsptUtmData();
-}, 1000);
+  fillHbsptUtmData();
+}, 2000);
