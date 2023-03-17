@@ -40,16 +40,13 @@ function getUTMData() {
 
 function fillHbsptUtmData() {
   const hbsptForm = document.querySelector('[id^="hbspt-form-"]');
-  console.log("test");
 
   if (!!hbsptForm) {
     let inputForm;
     const utmUserParams = JSON.parse(sessionStorage.getItem("utm") || "{}");
 
     Object.keys(utmUserParams).forEach((item) => {
-      console.log(item);
       inputForm = document.querySelector(`input[name='${item}']`);
-      console.log(inputForm);
       if (!!inputForm) inputForm.value = utmUserParams[item];
     });
   }
