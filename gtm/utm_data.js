@@ -34,7 +34,7 @@ function getUTMData() {
   // Get parameters
   let parameters = getQueryParameters(utmParameters);
 
-  // Set to Seccion Storage
+  // Set to Session Storage
   sessionStorage.setItem("utm", JSON.stringify(parameters));
 }
 
