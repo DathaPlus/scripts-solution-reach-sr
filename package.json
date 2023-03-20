@@ -1,5 +1,5 @@
 {
-  "name": "script-solution-reach",
+  "name": "@dathaplus/scripts-solution-reach-sr",
   "version": "1.0.0",
   "author": "Datha+",
   "license": "ISC",
@@ -9,29 +9,25 @@
     "type": "git",
     "url": "git+https://github.com/DathaPlus/scripts-solution-reach-sr.git"
   },
-  "scripts": {},
+  "scripts": {
+    "compile-gtm": "npx babel gtm --out-dir lib",
+    "format": "npx prettier --write ."
+  },
   "homepage": "https://github.com/sr-system-ops/sr-sfdc#readme",
   "devDependencies": {
     "@babel/cli": "^7.21.0",
     "@babel/core": "^7.21.3",
     "@babel/preset-env": "^7.20.2",
-    "@salesforce/sfdx-lwc-jest": "^1.1.3",
     "expect": "^27.0.2",
     "husky": "^7.0.4",
     "jest": "^27.0.4",
     "prettier": "^2.4.1"
   },
-  "dependencies": {
-    "axios": "^0.27.2",
-    "fs": "0.0.1-security",
-    "node-fetch": "^3.2.10",
-    "sfdx-cli": "^7.166.1",
-    "xmlbuilder": "^15.1.1"
-  },
+  "dependencies": {},
   "bugs": {
     "url": "https://github.com/DathaPlus/scripts-solution-reach-sr/issues"
   },
-  "main": "index.js",
+  "main": "index.html",
   "keywords": [
     "scripts",
     "sr"

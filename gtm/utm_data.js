@@ -42,7 +42,7 @@ function fillHbsptUtmData() {
   const hbsptForm = document.querySelector('[id^="hbspt-form-"]');
 
   if (!hbsptForm) return;
-  
+
   const utmUserParams = JSON.parse(sessionStorage.getItem("utm") || "{}");
 
   Object.keys(utmUserParams).forEach((item) => {
