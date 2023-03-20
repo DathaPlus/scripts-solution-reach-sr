@@ -52,25 +52,37 @@ function fillHbsptUtmData() {
   }
 }
 
-function setQPNewTab() {
+function setQueryParamsNewTab() {
   jQuery("a").mousedown(function (event) {
-    const utmData = JSON.parse(sessionStorage.getItem("utm") || "{}");
+    let queryString = "";
 
-    let queryString = "?";
-    Object.keys(utmData).forEach((item) => {
-      queryString = `${queryString}${item}=${utmData[item]}&`;
-    });
+    const isTarget = !!event.target.href;
+    let originalHref = isTarget ? event.target.href : event.currentTarget.href;
 
-    event.target.href = event.target.href + queryString;
+    if (event.button != 0 || event.ctrlKey || event.shiftKey) {
+      const utmData = JSON.parse(sessionStorage.getItem("utm") || "{}");
+      queryString = "?";
+
+      Object.keys(utmData).forEach((item) => {
+        queryString = `${queryString}${item}=${utmData[item]}&`;
+      });
+    } else {
+      if (`${originalHref}`.includes("?"))
+        originalHref = `${originalHref}`.split("?")[0];
+    }
+
+    if (isTarget) event.target.href = originalHref + queryString;
+    else event.currentTarget.href = originalHref + queryString;
   });
 }
 // ********** Here the magic!!!!
+
 window.onload = () => {
   getUTMData();
 
-  setQPNewTab();
+  setQueryParamsNewTab();
 };
 
 setTimeout(() => {
   fillHbsptUtmData();
-}, 2000);
+}, 3000);
