@@ -41,40 +41,41 @@ function getUTMData() {
 function fillHbsptUtmData() {
   const hbsptForm = document.querySelector('[id^="hbspt-form-"]');
 
-  if (!!hbsptForm) {
-    let inputForm;
-    const utmUserParams = JSON.parse(sessionStorage.getItem("utm") || "{}");
+  if (!hbsptForm) return;
+  
+  const utmUserParams = JSON.parse(sessionStorage.getItem("utm") || "{}");
 
-    Object.keys(utmUserParams).forEach((item) => {
-      inputForm = document.querySelector(`input[name='${item}']`);
-      if (!!inputForm) inputForm.value = utmUserParams[item];
-    });
-  }
+  Object.keys(utmUserParams).forEach((item) => {
+    let inputForm = document.querySelector(`input[name='${item}']`);
+    if (!!inputForm) inputForm.value = utmUserParams[item];
+  });
 }
 
 function setQueryParamsNewTab() {
-  jQuery("a").mousedown(function (event) {
-    let queryString = "";
+  document.querySelectorAll("a").forEach((anchor) =>
+    anchor.addEventListener("mousedown", (event) => {
+      let queryString = "";
+      const isTarget = !!event.target.href;
 
-    const isTarget = !!event.target.href;
-    let originalHref = isTarget ? event.target.href : event.currentTarget.href;
+      let originalHref = isTarget
+        ? event.target.href
+        : event.currentTarget.href;
 
-    if (event.button != 0 || event.ctrlKey || event.shiftKey) {
-      const utmData = JSON.parse(sessionStorage.getItem("utm") || "{}");
-      queryString = "?";
-
-      Object.keys(utmData).forEach((item) => {
-        queryString = `${queryString}${item}=${utmData[item]}&`;
-      });
-    } else {
-      if (`${originalHref}`.includes("?"))
+      if (event.button != 0 || event.ctrlKey || event.shiftKey) {
+        const utmData = JSON.parse(sessionStorage.getItem("utm") || "{}");
+        queryString = "?";
+        Object.keys(utmData).forEach((item) => {
+          queryString = `${queryString}${item}=${utmData[item]}&`;
+        });
+      } else if (`${originalHref}`.includes("?"))
         originalHref = `${originalHref}`.split("?")[0];
-    }
 
-    if (isTarget) event.target.href = originalHref + queryString;
-    else event.currentTarget.href = originalHref + queryString;
-  });
+      if (isTarget) event.target.href = originalHref + queryString;
+      else event.currentTarget.href = originalHref + queryString;
+    })
+  );
 }
+
 // ********** Here the magic!!!!
 
 window.onload = () => {
