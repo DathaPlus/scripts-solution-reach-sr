@@ -18,8 +18,7 @@ function getQueryParameters(parameters) {
 
   let utms = {};
   parameters.forEach((param) => {
-    if (param == "source_url")
-      utms = { ...utms, source_url: location.origin + location.pathname };
+    if (param == "source_url") utms = { ...utms, source_url: location.href };
 
     if (!!urlParams.get(param))
       utms = { ...utms, [param]: urlParams.get(param) };
